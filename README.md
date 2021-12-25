@@ -1,3 +1,5 @@
 - https://github.com/suren-atoyan/monaco-react
     - Check https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IStandaloneEditorConstructionOptions.html#theme
 - https://github.com/remarkjs/react-markdown
+- https://www.npmjs.com/package/react-syntax-highlighter
+    - Check supported languages through `SyntaxHighlighter.supportedLanguages;`

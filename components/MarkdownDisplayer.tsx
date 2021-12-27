@@ -1,5 +1,4 @@
 import ReactMarkdown from "react-markdown";
-import { Table, Code, Blockquote, Image } from "@mantine/core";
 import remarkGfm from "remark-gfm";
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
@@ -13,31 +12,26 @@ interface MarkdownDisplayerProps {
 export default function MarkdownDisplayer({ value }: MarkdownDisplayerProps) {
     return (
         <ReactMarkdown
+            className="prose prose-pre:bg-transparent"
             remarkPlugins={[remarkGfm, remarkMath]}
-            rehypePlugins={[rehypeKatex,]}
+            rehypePlugins={[rehypeKatex]}
             components={{
                 code({ node, inline, className, children, ...props }) {
                     const match = /language-(\w+)/.exec(className || '')
                     return !inline ? (
-                        <div>
-                            <SyntaxHighlighter
-                                style={materialDark}
-                                language={match ? match[1] : ''}
-                                PreTag="div"
-                                {...props}
-                            >
-                                {String(children).replace(/\n$/, '')}
-                            </SyntaxHighlighter>
-                        </div>
+                        <SyntaxHighlighter
+                            style={materialDark}
+                            language={match ? match[1] : ''}
+                            {...props}
+                        >
+                            {String(children).replace(/\n$/, '')}
+                        </SyntaxHighlighter>
                     ) : (
-                        <Code className={className} {...props}>
+                        <code className={className} {...props}>
                             {children}
-                        </Code>
+                        </code>
                     )
                 },
-                table: Table,
-                blockquote: Blockquote,
-                img: Image
             }}
         >{value}</ReactMarkdown>
     )

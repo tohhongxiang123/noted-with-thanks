@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
+import '../styles/globals.css'
 
 import 'katex/dist/katex.min.css'
 
@@ -19,7 +20,7 @@ export default function App(props: AppProps) {
         withNormalizeCSS
         theme={{
           /** Put your mantine theme override here */
-          colorScheme: 'dark',
+          colorScheme: 'light',
         }}
       >
         <Component {...pageProps} />

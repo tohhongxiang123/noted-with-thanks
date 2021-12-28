@@ -3,22 +3,17 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-const links = [
-    {
-        name: 'About',
-        link: '/about'
-    },
-    {
-        name: 'Edit',
-        link: '/edit'
-    },
-    {
-        name: 'Help',
-        link: '/help'
-    },
-]
+type NavBarLink = {
+    name: string,
+    link: string,
+    isPrivate?: boolean
+}
 
-export default function Navbar() {
+interface NavbarProps {
+    links?: NavBarLink[]
+}
+
+export default function Navbar({ links = [] }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const { data: session, status } = useSession();
@@ -46,21 +41,24 @@ export default function Navbar() {
                         <div className="flex-shrink-0 flex items-center">
                             <Link href="/"><a><strong className="text-xl font-bold text-white">NwT</strong></a></Link>
                         </div>
-                        {isLoggedIn && <div className="hidden sm:block sm:ml-6">
+                        <div className="hidden sm:block sm:ml-6">
                             <div className="flex space-x-4">
-                                {links.map(link => (
-                                    <Link href={link.link} key={link.link}>
-                                        <a href="#"
-                                            className={`
+                                {links
+                                    .filter(link => isLoggedIn || !link.isPrivate)
+                                    .map(link => (
+                                        <Link href={link.link} key={link.link}>
+                                            <a href="#"
+                                                className={`
                                         ${router.asPath === link.link ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"} 
                                         px-3 py-2 rounded-md text-sm font-medium`}
-                                        >
-                                            {link.name}
-                                        </a>
-                                    </Link>
-                                ))}
+                                            >
+                                                {link.name}
+                                            </a>
+                                        </Link>
+                                    ))
+                                }
                             </div>
-                        </div>}
+                        </div>
                     </div>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                         <div className="ml-3 relative">
@@ -81,9 +79,6 @@ export default function Navbar() {
                             ) : (
                                 <button onClick={() => signIn()}><a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-semibold tracking-wide">Login</a></button>
                             )}
-                            <div>
-
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,17 +86,19 @@ export default function Navbar() {
 
             <div className={`${isOpen ? "block" : "hidden"} sm:hidden`} id="mobile-menu">
                 <div className="px-2 pt-2 pb-3 space-y-1">
-                    {links.map(link => (
-                        <Link href={link.link} key={link.link}>
-                            <a href="#"
-                                className={`
+                    {
+                        links.filter(link => isLoggedIn || !link.isPrivate).map(link => (
+                            <Link href={link.link} key={link.link}>
+                                <a href="#"
+                                    className={`
                                         ${router.asPath === link.link ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"} 
                                         block px-3 py-2 rounded-md text-base font-medium`}
-                            >
-                                {link.name}
-                            </a>
-                        </Link>
-                    ))}
+                                >
+                                    {link.name}
+                                </a>
+                            </Link>
+                        ))
+                    }
                 </div>
             </div>
         </nav>

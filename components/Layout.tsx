@@ -4,16 +4,22 @@ import Navbar from './Navbar'
 
 interface LayoutProps {
     children: ReactNode | ReactNode[],
-    title?: string
+    title?: string,
+    description?: string,
 }
 
-export default function Layout({ children, title = 'Noted With Thanks' }: LayoutProps) {
+export default function Layout({ children, title = 'Noted With Thanks', description = '' }: LayoutProps) {
     return (
         <div>
             <Head>
                 <title>{title}</title>
+                {description && <meta name="description" content={description} />}
             </Head>
-            <Navbar />
+            <Navbar links={[
+                { name: 'About', link: '/about' },
+                { name: 'Edit', link: '/edit', isPrivate: true },
+                { name: 'Help', link: '/help' }
+            ]}/>
             <main>
                 {children}
             </main>

@@ -1,15 +1,16 @@
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import Layout from '../../components/Layout'
-import NotebookCard from '../../components/NotebookCard'
-import { Note } from '../../types/Notebook'
+import Layout from '../../../components/Layout'
+import NotebookCard from '../../../components/NotebookCard'
+import { Note } from '../../../types/Notebook'
 
 interface NotebookPageProps {
+    notebookId: string,
     title: string,
     notes: Note[]
 }
 
-export default function notebook({ title, notes = [] }: NotebookPageProps) {
+export default function notebook({ notebookId, title, notes = [] }: NotebookPageProps) {
     return (
         <Layout>
             <div className="p-4">
@@ -17,7 +18,7 @@ export default function notebook({ title, notes = [] }: NotebookPageProps) {
                 <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
                     {notes.map(note => (
                         <li key={note.id}>
-                            <NotebookCard {...note} />
+                            <NotebookCard {...note} link={`/notebooks/${notebookId}/notes/${note.id}`} />
                         </li>
                     ))}
                 </ul>
@@ -27,22 +28,22 @@ export default function notebook({ title, notes = [] }: NotebookPageProps) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const { query: { id } } = context
+    const { query: { notebook_id } } = context
 
-    const title = `Notebook ${id}`
+    const title = `Notebook ${notebook_id}`
     const notes: Note[] = [...Array(10)].map((_, index) => ({
         id: index.toString(),
         title: `Note ${index}`,
         image: `https://www.hyperui.dev/photos/man-${index}.jpeg`,
         content: '# Hello world',
         description: `This is a description for note ${index}`,
-        notebookId: id as string,
+        notebookId: notebook_id as string,
         publishedDate: `${index} Jan 2022`,
     }))
 
     return {
         props: {
-            id,
+            notebookId: notebook_id,
             title,
             notes
         }

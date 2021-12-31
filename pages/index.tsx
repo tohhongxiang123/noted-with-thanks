@@ -11,8 +11,8 @@ export default function Home({ notebooks = [] } : HomeProps) {
 	return (
 		<Layout>
 			<>
-				<ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 p-4">
-					{notebooks.map(notebook => <li key={notebook.id}><NotebookCard {...notebook} /></li>)}
+				<ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 p-4 gap-4">
+					{notebooks.map(notebook => <li key={notebook.id}><NotebookCard {...notebook} link={`/notebooks/${notebook.id}`} /></li>)}
 				</ul>
 			</>
 		</Layout>

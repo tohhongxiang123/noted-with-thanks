@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
-import Layout from "../../../../components/Layout";
-import MarkdownDisplayer from "../../../../components/MarkdownDisplayer";
+import { Button, Layout, MarkdownDisplayer } from "../../../../components";
 import { Note } from "../../../../types/Notebook";
+import Link from 'next/link'
 
 interface NotePageProps {
     notebookId: string,
@@ -17,6 +17,7 @@ export default function note({ notebookId, noteId, note }: NotePageProps) {
                     <h1 className="mb-1">{note.title}</h1>
                     <p className="m-0 text-sm">{note.publishedDate}</p>
                     <p className="text-lg font-medium opacity-70 my-2"><i>{note.description}</i></p>
+                    <Link href={`/edit`}><a><Button color="blue">Edit</Button></a></Link>
                 </div>
                 <div className="flex justify-center">
                     <MarkdownDisplayer value={note.content} />
@@ -70,6 +71,10 @@ magni nisi *causa* loquentis das resupinus invenit inmaduit, tenderet.
 > fallaces](http://ante-materiam.org/anguem-viscera) undas, illum, herbas.
 > Decepto inficere, tantos, meliora precantia Ceycis, [ostendere
 > medios](http://www.et-ore.io/).
+
+$$
+\\iint_{-\\infty}^{\\infty} e^{x^2} dx
+$$
 
 ## Comes timorem viribus stipite pignore natas
 

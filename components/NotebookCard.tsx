@@ -10,7 +10,7 @@ export default function NotebookCard({ id, title, image, description, publishedD
     return (
         <Link href={link}>
             <a
-                className="relative block p-8 overflow-hidden shadow rounded-lg"
+                className="relative block p-8 overflow-hidden shadow hover:shadow-lg rounded-lg"
                 href=""
             >
                 <div className="justify-between sm:flex">

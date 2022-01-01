@@ -10,7 +10,7 @@ interface LayoutProps {
 
 export default function Layout({ children, title = 'Noted With Thanks', description = '' }: LayoutProps) {
     return (
-        <div>
+        <div className="h-screen overflow-y-hidden flex flex-col relative">
             <Head>
                 <title>{title}</title>
                 {description && <meta name="description" content={description} />}
@@ -20,7 +20,7 @@ export default function Layout({ children, title = 'Noted With Thanks', descript
                 { name: 'Edit', link: '/edit', isPrivate: true },
                 { name: 'Help', link: '/help' }
             ]}/>
-            <main>
+            <main className="flex-1 overflow-y-auto">
                 {children}
             </main>
         </div>

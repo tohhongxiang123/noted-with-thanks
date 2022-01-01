@@ -1,13 +1,12 @@
 import { GetServerSidePropsContext } from 'next'
-import Layout from '../components/Layout'
-import NotebookCard from '../components/NotebookCard'
+import { NotebookCard, Layout } from '../components'
 import { Notebook } from '../types/Notebook'
 
 interface HomeProps {
 	notebooks: Notebook[]
 }
 
-export default function Home({ notebooks = [] } : HomeProps) {
+export default function Home({ notebooks = [] }: HomeProps) {
 	return (
 		<Layout>
 			<>

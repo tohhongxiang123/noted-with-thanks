@@ -1,22 +1,37 @@
 import Editor from "../components/Editor";
 import React, { useState } from 'react';
-import { Group } from "@mantine/core";
 
 import MarkdownDisplayer from "../components/MarkdownDisplayer";
+import { Layout } from "../components";
+import { GetServerSidePropsContext } from "next";
 
-export default function Edit() {
-	const [value, setValue] = useState('')
+interface EditPageProps {
+	value: string
+}
+
+export default function Edit({ value: defaultValue }: EditPageProps) {
+	const [value, setValue] = useState(defaultValue)
 
 	return (
-		<div style={{ height: '100vh', overflowY: 'hidden', position: 'relative' }}>
-			<Group position="apart" grow style={{ height: '100%', alignItems: 'start' }}>
-				<div style={{ width: '50%', height: '100%' }}>
-					<Editor value={value} onChange={setValue} />
+		<Layout title="Edit">
+			<div className="h-full overflow-y-hidden relative">
+				<div className="flex w-full h-full">
+					<div className="w-1/2 h-full">
+						<Editor value={value} onChange={setValue} />
+					</div>
+					<div className="overflow-y-auto w-1/2 h-full px-4 py-8">
+						<MarkdownDisplayer value={value} />
+					</div>
 				</div>
-				<div style={{ overflowY: 'auto', height: '100%', padding: '8px 16px' }}>
-					<MarkdownDisplayer value={value} />
-				</div>
-			</Group>
-		</div>
+			</div>
+		</Layout>
 	)
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+	return {
+		props: {
+			value: '# We wish you a merry christmas'
+		}
+	}
 }

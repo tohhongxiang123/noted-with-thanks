@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next'
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout, NotebookCard } from '../../../components'
 import { Note } from '../../../types/Notebook'
 
@@ -14,13 +14,10 @@ export default function notebook({ notebookId, title, notes = [] }: NotebookPage
         <Layout>
             <div className="p-4">
                 <h1 className="text-3xl font-bold mb-8">{title}</h1>
-                <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
-                    {notes.map(note => (
-                        <li key={note.id}>
-                            <NotebookCard {...note} link={`/notebooks/${notebookId}/notes/${note.id}`} />
-                        </li>
-                    ))}
+                <ul>
+                    {notes.map((note, index) => <li key={index}><RecursiveChapter {...note} /></li>)}
                 </ul>
+                <pre>{JSON.stringify(notes, null, 2)}</pre>
             </div>
         </Layout>
     )
@@ -30,15 +27,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const { query: { notebook_id } } = context
 
     const title = `Notebook ${notebook_id}`
-    const notes: Note[] = [...Array(109)].map((_, index) => ({
-        id: index.toString(),
-        title: `Note ${index}`,
-        image: `https://www.hyperui.dev/photos/man-${index}.jpeg`,
-        content: '# Hello world',
-        description: `This is a description for note ${index}`,
-        notebookId: notebook_id as string,
-        publishedDate: `${index} Jan 2022`,
-    }))
+    const notes: Note[] = [...Array(29)].map(() => generateNote())
 
     return {
         props: {
@@ -47,4 +36,39 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             notes
         }
     }
+}
+
+function generateNote(depth = 0): Note {
+    const index = Math.floor(Math.random() * 1000000)
+
+    return {
+        id: index.toString(),
+        title: `Note ${index}`,
+        content: '# Hello world',
+        description: `This is a description for note ${index}`,
+        notebookId: "1",
+        publishedDate: `${index} Jan 2022`,
+        parentId: null,
+        children: depth >= 4 ? [] : [...Array(Math.floor(Math.random() * 5))].map(() => generateNote(depth + 1))
+    }
+}
+
+interface RecursiveChapterProps extends Note {
+
+}
+
+function RecursiveChapter({ id, title, children, ...props }: RecursiveChapterProps) {
+    const [isOpen, setIsOpen] = useState(false)
+    
+    return (
+        <div className="p-4">
+            <div className="flex space-between gap-x-4">
+                <p>{title}</p>
+                {children.length > 0 && <button onClick={() => setIsOpen(c => !c)}> {isOpen ? `x` : `>`} </button>}
+            </div>
+            {(children.length > 0 && isOpen) && <ul className={"pl-4"}>
+                {children.map(child => <RecursiveChapter {...child} key={child.id} />)}
+            </ul>}
+        </div>
+    )
 }

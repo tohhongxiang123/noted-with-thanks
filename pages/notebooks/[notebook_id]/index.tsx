@@ -1,4 +1,6 @@
 import { GetServerSidePropsContext } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
 import React, { useState } from 'react'
 import { Layout, NotebookCard } from '../../../components'
 import { Note } from '../../../types/Notebook'
@@ -14,10 +16,9 @@ export default function notebook({ notebookId, title, notes = [] }: NotebookPage
         <Layout>
             <div className="p-4">
                 <h1 className="text-3xl font-bold mb-8">{title}</h1>
-                <ul>
+                <ul className='w-1/6'>
                     {notes.map((note, index) => <li key={index}><RecursiveChapter {...note} /></li>)}
                 </ul>
-                <pre>{JSON.stringify(notes, null, 2)}</pre>
             </div>
         </Layout>
     )
@@ -57,14 +58,21 @@ interface RecursiveChapterProps extends Note {
 
 }
 
-function RecursiveChapter({ id, title, children, ...props }: RecursiveChapterProps) {
+function RecursiveChapter({ id, title, children, notebookId, ...props }: RecursiveChapterProps) {
     const [isOpen, setIsOpen] = useState(false)
-    
+
     return (
-        <div className="p-4">
-            <div className="flex space-between gap-x-4">
-                <p>{title}</p>
-                {children.length > 0 && <button onClick={() => setIsOpen(c => !c)}> {isOpen ? `x` : `>`} </button>}
+        <div className="pt-4 w-full">
+            <div className="flex justify-between gap-x-4 w-full">
+                <Link href={`/notebooks/${notebookId}/notes/${id}`}>
+                    <a className="font-semibold text-lg opacity-70 hover:opacity-100">{title}</a>
+                </Link>
+                {children.length > 0 && (
+                    <button onClick={() => setIsOpen(c => !c)}> {isOpen ?
+                        <Image src="/icons/down_arrow.svg" width={28} height={28} /> :
+                        <Image src="/icons/right_arrow.svg" width={28} height={28} />}
+                    </button>
+                )}
             </div>
             {(children.length > 0 && isOpen) && <ul className={"pl-4"}>
                 {children.map(child => <RecursiveChapter {...child} key={child.id} />)}
